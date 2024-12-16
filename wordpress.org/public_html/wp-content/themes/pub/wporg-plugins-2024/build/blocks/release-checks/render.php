@@ -6,7 +6,7 @@
  */
 use WordPressdotorg\Plugin_Directory\Readme\Validator as Readme_Validator;
 
-use function WordPressdotorg\Theme\Plugins_2024\ReleaseChecks\{format_plugin_check_results, get_test_run_message};
+use function WordPressdotorg\Theme\Plugins_2024\Release_Checks\{format_plugin_check_results, get_test_run_message};
 use function WordPressdotorg\Plugin_Directory\Theme\{get_latest_release, get_plugin};
 
 if ( ! current_user_can( 'plugin_admin_edit', $post ) ) {

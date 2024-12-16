@@ -1,12 +1,12 @@
 <?php
 /**
  * Block Name: Release Commits
- * Description: A block to display release commits..
+ * Description: A block to display release commits.
  *
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Plugins_2024\ReleaseCommits;
+namespace WordPressdotorg\Theme\Plugins_2024\Release_Commits;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 

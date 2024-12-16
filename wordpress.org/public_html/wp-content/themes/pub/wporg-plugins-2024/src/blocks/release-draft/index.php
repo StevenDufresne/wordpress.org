@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Plugins_2024\ReleaseDraft;
+namespace WordPressdotorg\Theme\Plugins_2024\Release_Draft;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 

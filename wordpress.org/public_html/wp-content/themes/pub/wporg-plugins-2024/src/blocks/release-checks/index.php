@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Plugins_2024\ReleaseChecks;
+namespace WordPressdotorg\Theme\Plugins_2024\Release_Checks;
 
 use function WordPressdotorg\Plugin_Directory\Theme\get_plugin_slug;
 

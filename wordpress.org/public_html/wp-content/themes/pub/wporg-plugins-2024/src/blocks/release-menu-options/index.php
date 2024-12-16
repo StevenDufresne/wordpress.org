@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Plugins_2024\ReleaseMenuOptions;
+namespace WordPressdotorg\Theme\Plugins_2024\Release_Menu_Options;
 
 add_action( 'init', __NAMESPACE__ . '\init' );
 

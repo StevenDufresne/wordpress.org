@@ -1,7 +1,7 @@
 <?php
 /**
  * Block Name: Card
- * Description: A block to card.
+ * Description: A block to display card.
  *
  * @package wporg
  */

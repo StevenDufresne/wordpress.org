@@ -6,7 +6,7 @@
  * @package wporg
  */
 
-namespace WordPressdotorg\Theme\Plugins_2024\ReleasePublish;
+namespace WordPressdotorg\Theme\Plugins_2024\Release_Publish;
 
 use function WordPressdotorg\Plugin_Directory\Theme\{get_blueprint_url, get_latest_release, get_plugin_slug, get_plugin, get_revision_changeset_link};
 
