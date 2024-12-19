@@ -88,5 +88,45 @@ const { state } = store( 'wporg/publish-draft', {
 				state.isPublishing = false;
 			}
 		},
+		*handleGenerateClick( event ) {
+			event.preventDefault();
+
+			state.changelog = 'Generating....';
+
+			const { pluginSlug, nonce, apiURLChangelog, genericErrorMessage } = getContext();
+
+			try {
+				const response = yield fetch( apiURLChangelog, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-WP-Nonce': nonce,
+					},
+					body: JSON.stringify( {
+						plugin_slug: pluginSlug,
+					} ),
+				} );
+
+				if ( ! response.ok ) {
+					try {
+						const error = yield response.json();
+						throw new Error( error.message );
+					} catch ( error ) {
+						if ( error instanceof SyntaxError ) {
+							// Handle cases where json is not returned, like a gateway timeout.
+							throw new Error( genericErrorMessage );
+						}
+						throw error;
+					}
+				}
+
+				state.changelog = yield response.text();
+			} catch ( error ) {
+				state.errorMessage = error.message;
+				state.hasError = true;
+				state.isPublishing = false;
+				state.hasConfirmed = false;
+			}
+		}
 	},
 } );

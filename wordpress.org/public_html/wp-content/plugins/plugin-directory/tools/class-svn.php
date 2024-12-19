@@ -538,6 +538,23 @@ class SVN {
 	}
 
 	/**
+	 * Get the diff of a SVN URL.
+	 * 
+	 * @static
+	 */
+	public static function diff( $url, $revision = 'HEAD', $options = array() ) {
+		$options[]           = 'non-interactive';
+		$esc_options         = self::parse_esc_parameters( $options );
+
+		$esc_url = escapeshellarg( $url );
+
+		$output = self::shell_exec( "svn diff -c $revision $esc_options $esc_url 2>&1" );
+		$errors = self::parse_svn_errors( $output );
+
+		return compact( 'output', 'errors' );
+	}
+
+	/**
 	 * Parse and escape the provided SVN arguements for usage on the CLI.
 	 *
 	 * Parameters can be passed as [ param ] or [ param = value ], if the argument is not

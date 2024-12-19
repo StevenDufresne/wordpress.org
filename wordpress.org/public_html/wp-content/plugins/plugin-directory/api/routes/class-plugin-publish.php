@@ -12,6 +12,8 @@ use WP_REST_Server;
 use WordPressdotorg\Plugin_Directory\Plugin_Directory;
 use WordPressdotorg\Plugin_Directory\Plugin_Release;
 use WordPressdotorg\Plugin_Directory\API\Base;
+use WordPressdotorg\Plugin_Directory\Tools\SVN;
+use WordPressdotorg\Plugin_Directory\Cli\Import;
 
 /**
  * An API endpoint for publishing a release of a plugin.
@@ -30,6 +32,21 @@ class Plugin_Publish extends Base {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'publish_release' ),
+				'args'                => array(
+					'plugin_slug' => array(
+						'validate_callback' => array( $this, 'validate_plugin_slug_callback' ),
+					),
+				),
+				'permission_callback' => array( $this, 'permission_can_access_plugin' ),
+			)
+		);
+
+		register_rest_route(
+			'plugins/v2',
+			'/plugin/(?P<plugin_slug>[^/]+)/changelog',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'get_changelog' ),
 				'args'                => array(
 					'plugin_slug' => array(
 						'validate_callback' => array( $this, 'validate_plugin_slug_callback' ),
@@ -64,5 +81,32 @@ class Plugin_Publish extends Base {
 		$result = Plugin_Release::instance()->publish_release( $plugin );
 
 		return $result;
+	}
+
+
+	/**
+	 * A simple endpoint to publish a release.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 * @return WP_REST_Response
+	 */
+	public function get_changelog( $request ) {
+		$plugin = Plugin_Directory::get_plugin_post( $request['plugin_slug'] );
+
+		$draft = Plugin_Release::instance()->get_release( $plugin, 'trunk' );
+
+		$commits = get_post_meta( $draft->ID, 'release_commit_log', true );
+
+		$trunk_url = Import::PLUGIN_SVN_BASE . '/' . $plugin->post_name . '/trunk';
+		$prepared_commits = array();
+		foreach ( $commits as $key => $commit ) {
+			$diff = SVN::diff( $trunk_url, (int) $key );
+
+			$diff['message'] = $commit['message'];
+
+			$prepared_commits[] = $diff;
+		}
+
+		return $prepared_commits;
 	}
 }

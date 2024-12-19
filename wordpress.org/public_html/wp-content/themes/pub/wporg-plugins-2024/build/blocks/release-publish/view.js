@@ -149,6 +149,46 @@ const {
       } finally {
         state.isPublishing = false;
       }
+    },
+    *handleGenerateClick(event) {
+      event.preventDefault();
+      state.changelog = 'Generating....';
+      const {
+        pluginSlug,
+        nonce,
+        apiURLChangelog,
+        genericErrorMessage
+      } = (0,_wordpress_interactivity__WEBPACK_IMPORTED_MODULE_0__.getContext)();
+      try {
+        const response = yield fetch(apiURLChangelog, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-WP-Nonce': nonce
+          },
+          body: JSON.stringify({
+            plugin_slug: pluginSlug
+          })
+        });
+        if (!response.ok) {
+          try {
+            const error = yield response.json();
+            throw new Error(error.message);
+          } catch (error) {
+            if (error instanceof SyntaxError) {
+              // Handle cases where json is not returned, like a gateway timeout.
+              throw new Error(genericErrorMessage);
+            }
+            throw error;
+          }
+        }
+        state.changelog = yield response.text();
+      } catch (error) {
+        state.errorMessage = error.message;
+        state.hasError = true;
+        state.isPublishing = false;
+        state.hasConfirmed = false;
+      }
     }
   }
 });

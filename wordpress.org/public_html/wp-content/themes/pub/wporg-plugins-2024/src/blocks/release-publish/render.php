@@ -38,6 +38,7 @@ $form_context = array(
 	'pluginSlug'          => $plugin_slug,
 	'nonce'               => wp_create_nonce( 'wp_rest' ),
 	'apiURL'              => esc_url( rest_url( 'plugins/v2/plugin/' . $plugin_slug . '/publish' ) ),
+	'apiURLChangelog'      => esc_url( rest_url( 'plugins/v2/plugin/' . $plugin_slug . '/changelog' ) ),
 	'genericErrorMessage' => __( 'An error occurred while publishing the release.', 'wporg-plugins' ),
 	'tooltipMessage'      => __( 'Please fill out this field.', 'wporg-plugins' ),
 );
@@ -53,6 +54,7 @@ wp_interactivity_state(
 		'isPublished'  => false,
 		'hasError'     => false,
 		'errorMessage' => '',
+		'changelog'    => '',
 	)
 );
 
@@ -113,6 +115,24 @@ wp_interactivity_state(
 				);
 				?>
 			</div>
+
+			<div>
+				<h4>Generate Changelog</h4>
+
+				<button data-wp-on-async--click="actions.handleGenerateClick">
+					Generate
+				</button>
+
+				<textarea 
+					data-wp-bind--value="state.changelog" 
+					data-wp-on-async--input="actions.handleChangelogInput"
+					placeholder="Enter your changelog here"
+				></textarea>
+
+			</div>
+
+
+
 
 			<div class="wp-block-group wp-block-wporg-release-publish-actions">
 				<div class="wp-block-button is-small">
